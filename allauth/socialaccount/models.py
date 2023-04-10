@@ -106,6 +106,8 @@ class SocialAccount(models.Model):
     uid = models.CharField(
         verbose_name=_("uid"), max_length=app_settings.UID_MAX_LENGTH
     )
+    is_connect = models.BooleanField(verbose_name=_("is connect"), default=False)
+
     last_login = models.DateTimeField(verbose_name=_("last login"), auto_now=True)
     date_joined = models.DateTimeField(verbose_name=_("date joined"), auto_now_add=True)
     extra_data = JSONField(verbose_name=_("extra data"), default=dict)
@@ -247,8 +249,8 @@ class SocialLogin(object):
             self.token.account = self.account
             self.token.save()
         if connect:
-            # TODO: Add any new email addresses automatically?
-            pass
+            self.account.is_connect = True
+            self.account.save()
         else:
             setup_user_email(request, user, self.email_addresses)
 
